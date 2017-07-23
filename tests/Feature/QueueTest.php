@@ -9,7 +9,7 @@ class QueueTest extends \Tests\TestCase
     {
         Queue::fake();
 
-        $user = new \App\User();
+        $user = new \App\Entity\User();
         $user->fill([
             'id' => 1,
             'first_name' => 'Test',

@@ -14,3 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('login/{provider}', 'Auth\SocialiteLoginController@redirectToProvider')->name('fb.login');
+Route::get('login/{provider}/callback', 'Auth\SocialiteLoginController@handleProviderCallback')->name('fb.login.callback');
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('cars', 'CarController');
+});

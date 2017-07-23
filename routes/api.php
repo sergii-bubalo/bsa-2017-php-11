@@ -16,3 +16,25 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware(['auth'])->prefix('cars')->group(function () {
+    Route::get('/', 'Api\CarController@index')->name('api.car.index');
+
+    Route::get('{id}', 'Api\CarController@show')->name('api.car.show');
+});
+
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::resource('cars', 'Api\Admin\CarController',
+        [
+            'except' => [
+                'create', 'edit',
+            ],
+            'names' => [
+                'index' => 'api.admin.cars.index',
+                'store' => 'api.admin.cars.store',
+                'show' => 'api.admin.cars.show',
+                'update' => 'api.admin.cars.update',
+                'destroy' => 'api.admin.cars.destroy',
+            ]
+        ]);
+});
