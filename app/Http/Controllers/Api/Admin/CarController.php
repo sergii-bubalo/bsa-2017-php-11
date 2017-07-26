@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Entity\Car;
-use App\Entity\User;
 use App\Jobs\SendNotificationEmail;
+use App\Jobs\Traits\CarCreateNotificationTrait;
 use App\Manager\CarManager;
 use App\Request\Contract\SaveCarRequest;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 
 class CarController extends Controller
 {
+    use CarCreateNotificationTrait;
+
     private $carManager;
 
     public function __construct(CarManager $carManager)
@@ -50,13 +51,9 @@ class CarController extends Controller
     {
         $this->authorize('hasApiAccess', Car::class);
 
-        $users = User::all();
         $car = $this->carManager->saveCar($request);
 
-        foreach ($users as $user) {
-            $job = (new SendNotificationEmail($user))->onQueue('notification');
-            dispatch($job);
-        }
+        $this->carCreateNotification($car);
 
         return response()->json($car);
     }

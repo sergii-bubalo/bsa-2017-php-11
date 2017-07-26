@@ -35,7 +35,7 @@ class Car extends Model
 
     /**
      * @param int $id
-     * @return Vehicle
+     * @return Car
      */
     public function setId(int $id) : self
     {
